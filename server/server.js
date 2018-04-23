@@ -17,21 +17,27 @@ const users = new Users();
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
-  console.log('New user connected');
-
+  // console.log('New user connected');
+  
   socket.on('join', (params, callback)=>{
-    console.log(isRealString(params.name))
+    params.room = params.room.toLowerCase();
+
     if(!isRealString(params.name) || !isRealString(params.room)){
       callback('Name and room name are required.');
     };
     socket.join(params.room);
     users.removeUser(socket.id);
-    users.addUser(socket.id, params.name, params.room);
-    
+    const addUser = users.addUser(socket.id, params.name, params.room);
+    if(!addUser){
+      callback('Username actually in use.')
+    };
+    io.emit('newRoomsList', users.getRoomsList());
     io.to(params.room).emit('updateUserList', users.getUserList(params.room));
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
     callback();
+
+    // io.emit('getRooms')
   });
 
   socket.on('createMessage', (message, callback) => {
@@ -54,12 +60,18 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('User was disconnected');
-    const user = users.removeUser(socket.id);
 
+    const user = users.removeUser(socket.id);
+    io.emit('newRoomsList', users.getRoomsList());
+    
     if(user){
       io.to(user.room).emit('updateUserList', users.getUserList(user.room));
       io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left.`));
     }
+  });
+
+  socket.on('getRoomsList', () => {
+    socket.emit('newRoomsList', users.getRoomsList());
   });
 });
 

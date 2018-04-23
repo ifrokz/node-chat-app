@@ -1,8 +1,4 @@
-[{
-    id: '/#12l;je;kl32',
-    name: 'Ivan',
-    room: "The Office Fans"
-}]
+const _ = require('lodash');
 
 class User {
     constructor(id,name,room){
@@ -18,8 +14,12 @@ class Users {
     }
 
     addUser (id, name, room) {
-        const user = new User(id,name,room);
-        this.users.push(user);
+        const userExists = this.users.filter(user=> user.name === name);
+        let user;
+        if(userExists.length === 0){
+            user = new User(id,name,room);
+            this.users.push(user);
+        }
         return user;
     };
 
@@ -43,6 +43,12 @@ class Users {
 
         return namesArray;
     };
+
+    getRoomsList () {
+        const rooms = this.users.map(user=>user.room);
+        const uniqRooms = _.uniq(rooms);
+        return uniqRooms;
+    }
 };
 
 module.exports = {

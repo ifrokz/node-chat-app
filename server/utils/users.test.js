@@ -59,5 +59,11 @@ describe('class Users',()=>{
         const res = users.getUser(userId);
 
         expect(res).toBeFalsy();
-    })
+    });
+
+    it('should return a list of uniq rooms',()=>{
+        const rooms =users.getRoomsList();
+        
+        expect(rooms).toEqual([ 'Node Course', 'React Course' ]);
+    });
 });
