@@ -13,7 +13,7 @@ function scrollToBottom() {
 
   if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight){
     messages.scrollTop(scrollHeight);
-  }
+  };
 };
 
 socket.on('connect', function () {
@@ -66,7 +66,7 @@ var locationButton = jQuery('#send-location');
 locationButton.on('click', function () {
   if (!navigator.geolocation) {
     return alert('Geolocation not supported by your browser.');
-  }
+  };
 
   locationButton.attr('disabled', 'disabled').text('Sending location...');
 
