@@ -2,7 +2,7 @@ const expect = require('expect');
 
 const {generateMessage, generateLocationMessage} = require('./message');
 
-describe('generateMessage', ()=>{
+describe('generateMessage()', ()=>{
     it('should generate the correct message object', ()=>{
         const from = 'Author';
         const text = 'Some text';
@@ -13,7 +13,7 @@ describe('generateMessage', ()=>{
     });
 });
 
-describe('generateLocationMessage', () => {
+describe('generateLocationMessage()', () => {
     it('should generate hte correct message ebject', () => {
         const from = 'Author';
         const latitude = 1;
